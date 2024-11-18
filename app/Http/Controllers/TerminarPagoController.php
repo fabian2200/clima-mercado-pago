@@ -37,11 +37,11 @@ class TerminarPagoController extends Controller
         $client = new PaymentClient();
         
         $createRequest = [
-            "transaction_amount" => 1000,//(double) $request->input('transactionAmount'),
+            "transaction_amount" => (double) $request->input('transactionAmount'),
             "description" =>  $request->input('description'),
             "payment_method_id" => "pse",
-            "callback_url" => $_ENV['CALLBACK_URL'],
-            "notification_url" => $_ENV['CALLBACK_URL'],
+            "callback_url" => config('app.url') . '/estado-pago',
+            "notification_url" => config('app.url') . '/estado-pago',
             "additional_info" => [
                 "ip_address" => $request->ip(),
             ],
