@@ -21,7 +21,10 @@
 
     .principal {
         width: 100%;
-        min-height: 75vh;
+        height: 75vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     div:where(.swal2-container) .swal2-input {
@@ -76,7 +79,7 @@
         <div class="row" style="width: 100%">
             <div class="col-lg-1"></div>
             <div class="col-lg-10">
-                <div class="row" style="margin-left: 15px; margin-right: 0px">
+                <div class="row" style="margin-left: -2px; margin-right: 0px">
                     @foreach ($paquetes as $paquete)
                         <div class="col-lg-4">
                             <div class="package package_free">
