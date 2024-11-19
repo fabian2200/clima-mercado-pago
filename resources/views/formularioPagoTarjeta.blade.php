@@ -19,6 +19,16 @@
     .navbar-dark .navbar-nav .nav-link:hover {
         color: rgba(0, 0, 0, .75);
     }
+
+    .desc {
+        width: fit-content;
+        background-color: #ff6700;
+        border-radius: 10px;
+        padding: 1px;
+        padding-left: 15px;
+        padding-right: 15px;
+        color: white;
+    }
     </style>
 </head>
 
@@ -47,8 +57,8 @@
         <!-- Hidden input to store your integration public key -->
         <input type="hidden" id="mercado-pago-public-key" value="TEST-af4d1474-2c7d-4aa6-a910-50504b0ed6b8">
         <!-- Payment -->
-        <section class="payment-form dark" style="padding-top: 5%">
-            <div class="container__payment">
+        <section class="payment-form dark">
+            <div class="container__payment" style="padding-top: 5%">
                 <div class="form-payment row">
                     <div class="products col-lg-4">
                         <h2 style="font-weight: bold; color: #0648486b0641;" class="detalles">Resumen del pedido</h2>
@@ -56,13 +66,28 @@
                         <div class="item"
                             style="padding: 17px; background-color: #f2f3f3;border-radius: 10px;color: #384551;">
                             <span class="price" id="summary-price"></span>
-                            <h5 style="color: #231879"><strong>Servicio:</strong> {{ $desc_servicio }}</h5>
-                            <br>
-                            <p class="item-name"><strong>Cantidad de pines</strong> {{ $cantidad_pines }}</p>
-                            <p class="item-name"><strong>Precio por pin </strong>
-                                ${{ number_format($valor_pin, 0, ',', '.') }}</p>
-                            <div class="total"><strong>Total</strong><span class="price"
-                                    id="summary-total"><strong>${{ number_format($total, 0, ',', '.') }}</strong></span>
+                            <h5 style="color: #171053"><strong>Servicio:</strong> {{ $desc_servicio }}</h5>
+                            <h5 style="text-transform: capitalize">{{ $nombre }}</h5>
+                            <hr>
+                            <p class="item-name">
+                                <strong>Cantidad de pines:</strong> 
+                                {{ $cantidad_pines }}
+                            </p>
+                            <p class="item-name">
+                                <strong>Precio por pin: </strong>
+                                ${{ number_format($valor_pin, 0, ',', '.') }}
+                            </p>
+                            <p class="item-name">
+                                <strong>Descuento: </strong>
+                                <label class="desc">{{ $descuento }}%</label>
+                            </p>
+                            <div class="total">
+                                <strong style="font-size: 2rem">Total</strong>
+                                <span class="price"id="summary-total">
+                                    <strong style="font-size: 2rem">
+                                        ${{ number_format($total, 0, ',', '.') }}
+                                    </strong>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -125,7 +150,7 @@
                                     <div style="position: relative">
                                         <h3 class="detalles">Detalles de la tarjeta</h3>
                                         <div id="contenedor_type_card" class="imagen_tarjeta_tipo">
-                                            <img style="height: 100%;" src="" id="type_card" alt="">
+                                            <img style="height: 70%; max-width: 100%;" src="" id="type_card" alt="">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -153,10 +178,11 @@
                                                 class="form-control"></select>
                                         </div>
                                         <div class="form-group col-sm-12" style="margin-bottom: 0px;">
-                                            <button id="form-checkout__submit" type="submit"
-                                                class="btn btn-primary btn-block">Continuar con el pago <i
-                                                    class="fa fa-arrow-right" aria-hidden="true"></i></button>
-                                            <p id="loading-message">Procesando pago, espere un momento...</p>
+                                            <button disabled="true" id="form-checkout__submit" type="submit"
+                                                class="btn btn-primary btn-block">
+                                                Continuar con el pago 
+                                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </form>
@@ -282,9 +308,8 @@
         <!-- Result -->
         <section class="shopping-cart dark">
             <div class="container container__result">
-                <div class="block-heading">
-                    <h2>Payment Result</h2>
-                    <p>This is an example of a Mercado Pago integration</p>
+                <div class="block-heading" style="padding-top: 45;">
+                    <h2>Resultado de la transacción </h2>
                 </div>
                 <div class="content">
                     <div class="row">
@@ -293,20 +318,15 @@
                                 <div class="row justify-content-md-center">
                                     <div class="col-md-4 product-detail">
                                         <div class="product-info">
-                                            <div id="fail-response">
-                                                <br />
-                                                <img src="img/fail.png" width="350px">
-                                                <p class="text-center font-weight-bold">Something went wrong</p>
-                                                <p id="error-message" class="text-center"></p>
-                                                <br />
-                                            </div>
-
-                                            <div id="success-response">
-                                                <br />
-                                                <p><b>ID: </b><span id="payment-id"></span></p>
-                                                <p><b>Status: </b><span id="payment-status"></span></p>
-                                                <p><b>Detail: </b><span id="payment-detail"></span></p>
-                                                <br />
+                                            <div id="fail-response" style="display: block;text-align: center;">
+                                                <br>
+                                                <img src="/img/fail.png" width="100px">
+                                                <p class="text-center font-weight-bold" style="font-size: 23px;font-weight: bold !important;!i;!;">Ocurrió un error durante el proceso de pago</p>
+                                                <hr>
+                                                <p id="error-message" class="text-center" style="font-size: 21px;"></p>
+                                                <br>
+                                                <button onclick="location.reload();" style="margin-bottom: 20px;" class="btn btn-warning">Intentar Pago Nuevamente <i class="fa fa-refresh" aria-hidden="true"></i></button>
+                                                <br>
                                             </div>
                                         </div>
                                     </div>
@@ -337,7 +357,7 @@
 
     function loadCardForm() {
         const productCost = "{{$total}}";
-        const productDescription = "{{$desc_servicio}}";
+        const productDescription = "{{$desc_servicio}}"+" - "+"{{$nombre}}";
 
         const form = {
             id: "form-checkout",
@@ -399,7 +419,15 @@
                 },
                 onSubmit: event => {
                     event.preventDefault();
-                    document.getElementById("loading-message").style.display = "block";
+                   
+                    Swal.fire({
+                        title: 'Procesando el pago',
+                        html: 'Por favor espera, puede tardar varios segundos...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
 
                     const {
                         paymentMethodId,
@@ -413,69 +441,68 @@
                     } = cardForm.getCardFormData();
 
                     fetch("/procesar-pago-tarjeta", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                                _token: document.querySelector('input[name="_token"]').value,
-                                token,
-                                issuerId,
-                                paymentMethodId,
-                                transactionAmount: Number(amount),
-                                installments: Number(installments),
-                                description: productDescription,
-                                payer: {
-                                    email,
-                                    identification: {
-                                        type: identificationType,
-                                        number: identificationNumber,
-                                    },
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            _token: document.querySelector('input[name="_token"]').value,
+                            token,
+                            issuerId,
+                            paymentMethodId,
+                            transactionAmount: Number(amount),
+                            installments: Number(installments),
+                            description: productDescription,
+                            payer: {
+                                email,
+                                identification: {
+                                    type: identificationType,
+                                    number: identificationNumber,
                                 },
-                            }),
-                        })
-                        .then(response => {
-                            var respuesta = response.json();
-                            return respuesta;
-                        })
-                        .then(result => {
-                            if (!result.hasOwnProperty("error_message")) {
-                                const baseurl = `${window.location.origin}`;
-                                const payment_id = result.id;
-                                const redirectUrl = `${baseurl}/estado-pago?payment_id=${payment_id}`;
-                                window.open(redirectUrl, '_blank');
-                            } else {
-                                document.getElementById("error-message").textContent = result
-                                    .error_message;
-                                document.getElementById("fail-response").style.display = "block";
-                                $('.container__payment').fadeOut(500);
-                                setTimeout(() => {
-                                    $('.container__result').show(500).fadeIn();
-                                }, 500);
-                            }
-                        })
-                        .catch(error => {
-                            alert("Unexpected error\n" + JSON.stringify(error));
-                        });
+                            },
+                        }),
+                    }).then(response => {
+                        swal.close()
+                        var respuesta = response.json();
+                        return respuesta;
+                    }).then(result => {
+                        swal.close();
+                        if (!result.hasOwnProperty("error_message")) {
+                            const baseurl = `${window.location.origin}`;
+                            const payment_id = result.id;
+                            const redirectUrl = `${baseurl}/estado-pago?payment_id=${payment_id}`;
+                            window.open(redirectUrl, '_self');
+                        } else {
+                            document.getElementById("error-message").textContent = result.error_message;
+                            document.getElementById("fail-response").style.display = "block";
+                            $('.container__payment').fadeOut(500);
+                            setTimeout(() => {
+                                $('.container__result').show(500).fadeIn();
+                            }, 500);
+                        }
+                    }).catch(error => {
+                        document.getElementById("error-message").textContent = "Ocurrió un error, intente mas tarde";
+                        document.getElementById("fail-response").style.display = "block";
+                        $('.container__payment').fadeOut(500);
+                        setTimeout(() => {
+                            $('.container__result').show(500).fadeIn();
+                        }, 500);
+                    });
                 },
                 onFetching: (resource) => {
                     console.log("Fetching resource: ", resource);
-                    const payButton = document.getElementById("form-checkout__submit");
-                    payButton.setAttribute('disabled', true);
-                    return () => {
-                        payButton.removeAttribute("disabled");
-                    };
                 },
                 onPaymentMethodsReceived: (error, paymentMethods) => {
                     if (paymentMethods) {
                         if (paymentMethods.length >= 1) {
                             document.getElementById("contenedor_type_card").style.display = "block";
-                            document.getElementById("type_card").setAttribute("src", paymentMethods[0]
-                                .thumbnail)
+                            document.getElementById("type_card").setAttribute("src", paymentMethods[0].thumbnail)
                         }
+                        document.getElementById("form-checkout__submit").removeAttribute("disabled");
                     } else {
                         document.getElementById("type_card").setAttribute("src", "");
                         document.getElementById("contenedor_type_card").style.display = "none";
+                        document.getElementById("form-checkout__submit").setAttribute('disabled', true);
                     }
                 },
                 onCardTokenReceived: (errorData, token) => {
@@ -505,7 +532,7 @@
                         },
                         {
                             message: 'El mes de expiración debe ser un valor entre 1 y 12.'
-                        }, // Nuevo mensaje
+                        },
                         {
                             message: 'El año de expiración debe ser mayor o igual al año actual.'
                         }
@@ -538,30 +565,40 @@
     </script>
 
     <script>
-    document.querySelectorAll('input[name="customRadioTemp"]').forEach(input => {
-        input.addEventListener('change', function() {
-            document.querySelectorAll('.custom-option').forEach(option => {
-                option.classList.remove('checked');
+        document.querySelectorAll('input[name="customRadioTemp"]').forEach(input => {
+            input.addEventListener('change', function() {
+                document.querySelectorAll('.custom-option').forEach(option => {
+                    option.classList.remove('checked');
+                });
+
+                this.closest('.custom-option').classList.add('checked');
+
+                var tipo = this.value;
+
+                if (tipo === 'pse') {
+                    $('#card-form-pay').fadeOut(300, function() {
+                        $('#pse-pay').fadeIn(300);
+                    });
+                } else {
+                    $('#pse-pay').fadeOut(300, function() {
+                        $('#card-form-pay').fadeIn(300);
+                    });
+                }
+
             });
-
-            this.closest('.custom-option').classList.add('checked');
-
-            var tipo = this.value;
-
-            if (tipo === 'pse') {
-                $('#card-form-pay').fadeOut(300, function() {
-                    $('#pse-pay').fadeIn(300);
-                });
-            } else {
-                $('#pse-pay').fadeOut(300, function() {
-                    $('#card-form-pay').fadeIn(300);
-                });
-            }
-
         });
 
-
-    });
+        this.closest('.custom-option').classList.add('checked');
+        var tipo = this.value;
+        if (tipo === 'pse') {
+            $('#card-form-pay').fadeOut(300, function() {
+                $('#pse-pay').fadeIn(300);
+            });
+        } else {
+            $('#pse-pay').fadeOut(300, function() {
+                $('#card-form-pay').fadeIn(300);
+            });
+        }
     </script>
 
     <script>

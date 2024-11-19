@@ -21,10 +21,11 @@
 
     .principal {
         width: 100%;
-        height: 75vh;
+        height: fit-content;
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
     }
 
     div:where(.swal2-container) .swal2-input {
@@ -44,10 +45,9 @@
 
     footer {
         padding: 1.5% 10% 1% 10%;
-        margin: 0 auto;
-        position: absolute;
         width: 100%;
-        bottom: 0;
+        position: fixed;
+        bottom: 0px;
     }
 
     </style>
@@ -94,7 +94,7 @@
                                     @endif
                                 </ul>
                                 <div class="price">$<div class="big">{{number_format($paquete->total)}}</div></div>
-                                <button>Comprar Paquete <i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                                <a href="{{ route('formularioPagoTarjeta', ['id_paquete' => $paquete->id]) }}">Comprar Paquete <i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
                             </div>
                         </div>
                     @endforeach 
@@ -102,7 +102,9 @@
             </div>
             <div class="col-lg-1"></div>
         </div>
+        <br><br><br><br>
     </div>
+
     <footer class="text-center text-white" style="background-color: #343a40;">
         <!-- Copyright -->
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
@@ -118,10 +120,10 @@
     <script>
     function buscarPedido() {
         Swal.fire({
-            title: 'Consultar Estado del Pedido',
+            title: 'Consultar Estado de compra',
             input: 'text',
-            inputLabel: 'Ingrese el ID del pedido:',
-            inputPlaceholder: 'ID del pedido',
+            inputLabel: 'Ingrese el ID de la orden:',
+            inputPlaceholder: 'ID de la orden',
             showCancelButton: true,
             confirmButtonText: 'Buscar',
             cancelButtonText: 'Cancelar',

@@ -35,13 +35,15 @@ class TerminarPagoController extends Controller
         $request_options->setCustomHeaders(["X-Idempotency-Key: $idempotencyKey"]);
     
         $client = new PaymentClient();
+
+        $url_base = $baseUrl = url('/');
         
         $createRequest = [
             "transaction_amount" => (double) $request->input('transactionAmount'),
             "description" =>  $request->input('description'),
             "payment_method_id" => "pse",
-            "callback_url" => config('app.url') . '/estado-pago',
-            "notification_url" => config('app.url') . '/estado-pago',
+            "callback_url" => $url_base . '/estado-pago',
+            "notification_url" => $url_base . '/estado-pago',
             "additional_info" => [
                 "ip_address" => $request->ip(),
             ],
@@ -71,11 +73,13 @@ class TerminarPagoController extends Controller
                 ],
             ],
         ];
+        
 
         try {
             $payment = $client->create($createRequest, $request_options);
             return redirect($payment->transaction_details->external_resource_url);
         } catch (MPApiException $e) {
+
             $errorMessage = $e->getMessage();
             $statusCode = $e->getStatusCode();
             $apiResponse = $e->getApiResponse();
@@ -106,23 +110,36 @@ class TerminarPagoController extends Controller
         $idempotencyKey = Str::random(32);
         $request_options->setCustomHeaders(["X-Idempotency-Key: $idempotencyKey"]);
 
-        $payment = $client->create([
-            'transaction_amount' => (float) $data['transactionAmount'],
-            'token' => $data['token'],
-            'description' => $data['description'],
-            'installments' => (int) $data['installments'],
-            'payment_method_id' => $data['paymentMethodId'],
-            'issuer_id' => $data['issuerId'] ?? null,
-            'payer' => [
-                'email' => $data['payer']['email'],
-                'identification' => [
-                    'type' => $data['payer']['identification']['type'],
-                    'number' => $data['payer']['identification']['number'],
+        try {
+            $payment = $client->create([
+                'transaction_amount' => (float) $data['transactionAmount'],
+                'token' => $data['token'],
+                'description' => $data['description'],
+                'installments' => (int) $data['installments'],
+                'payment_method_id' => $data['paymentMethodId'],
+                'issuer_id' => $data['issuerId'] ?? null,
+                'payer' => [
+                    'email' => $data['payer']['email'],
+                    'identification' => [
+                        'type' => $data['payer']['identification']['type'],
+                        'number' => $data['payer']['identification']['number'],
+                    ],
                 ],
-            ],
-        ], $request_options);
+            ], $request_options);
+    
+            return response()->json($payment);
 
-        return response()->json($payment);
+        } catch (MPApiException $e) {
+            $errorMessage = $e->getMessage();
+            $statusCode = $e->getStatusCode();
+            $apiResponse = $e->getApiResponse();
+        
+            return response()->json([
+                'error_message' => "Verifique los datos ingresados",
+                'statusCode' => $statusCode,
+                'apiResponse' => $apiResponse,
+            ], 500);
+        }
     }
 
     public function estadoPago(Request $request){
@@ -146,7 +163,7 @@ class TerminarPagoController extends Controller
             }
         }
 
-        if($payment["payment_type_id"] == "prepaid_card"){
+        if($payment["payment_type_id"] == "prepaid_card" || $payment["payment_type_id"] == "debit_card" || $payment["payment_type_id"] == "credit_card"){
             $banco = "tarjeta de crédito / débito ".$payment_method["name"];
             $tid = $payment["collector_id"];
         }else{

@@ -96,7 +96,7 @@
     background: var(--col-light);
 }
 
-.package button {
+.package a {
     cursor: pointer;
     padding: .5em 1em;
     font-size: 1rem;
@@ -107,10 +107,13 @@
     border-radius: 5px;
     background: linear-gradient(0deg, #00816f 0%, #29b361 100%);
     transition: all 0.2s;
+    width: 250px;
+    text-align: center;
+    text-decoration: none;
 }
 
-.package button:hover,
-.package button:focus {
+.package a:hover,
+.package a:focus {
     background: linear-gradient(
         0deg,
         var(--col-secondary) 0%,

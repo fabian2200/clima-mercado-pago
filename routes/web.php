@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TerminarPagoController;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -12,15 +14,29 @@ Route::get('/', function () {
 Route::get('/metodos-pago', [TerminarPagoController::class, 'listarMetodosPago'])->name('listarMetodosPago');
 Route::get('/estado-pago', [TerminarPagoController::class, 'estadoPago'])->name('estadoPago');
 
-Route::get('/formulario-pago', function () {
-    // Definir valores
-    $cantidad_pines = 20;
-    $valor_pin = 100;
-    $total = $cantidad_pines * $valor_pin;
-    $desc_servicio = "Venta de pines - clima";
+Route::get('/formulario-pago', function (Request $request) {
+    $id_paquete = $request->input('id_paquete'); 
 
-    // Pasar valores a la vista
-    return view('formularioPagoTarjeta', compact('cantidad_pines', 'valor_pin', 'total', 'desc_servicio'));
+    $paquete = DB::connection("mysql")->table("paquetes")
+    ->where("id", $id_paquete)
+    ->first();
+
+    if($paquete){
+        $cantidad_pines = $paquete->numero_pines; 
+        $valor_pin = $paquete->precio_pin;  
+        $descuento = $paquete->descuento; 
+        $total = $paquete->total; 
+        $desc_servicio = $request->input('desc_servicio', 'Venta de pines'); 
+        $nombre = $paquete->nombre;
+    }else{
+        $cantidad_pines = 0; 
+        $valor_pin = 0; 
+        $descuento =0; 
+        $total = 0;
+        $desc_servicio = "Venta de pines"; 
+        $nombre = "paquete no encontrado";
+    }
+    return view('formularioPagoTarjeta', compact('cantidad_pines', 'valor_pin', 'total', 'desc_servicio', 'descuento', 'nombre'));
 })->name('formularioPagoTarjeta');
 
 Route::post('/procesar-pago', [TerminarPagoController::class, 'TerminarPago'])->name('TerminarPago');
