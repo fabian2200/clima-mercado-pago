@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\PaymentMethod\PaymentMethodClient;
 use MercadoPago\Exceptions\MPApiException;
-
 use Illuminate\Support\Facades\Redirect;
-
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+
+use App\Http\Controllers\EmailController;
 
 class TerminarPagoController extends Controller
 {
@@ -77,9 +78,38 @@ class TerminarPagoController extends Controller
 
         try {
             $payment = $client->create($createRequest, $request_options);
+            $id_paquete = $request->input("id_paquete");
+            $apiUrl = "https://clima.institutocolombianodepsicometria.com/api/buscar-paquete?id_paquete=" . $id_paquete;
+            $response = Http::get($apiUrl);
+            $paquete = $response->object();
+
+            self::guardarPedido(
+                $paquete->numero_pines, 
+                $paquete->precio_pin,
+                $paquete->total,
+                $paquete->id,
+                date('d-m-Y H:i:s'),
+                $createRequest['payer']['first_name'],
+                $createRequest['payer']['last_name'],
+                $createRequest['payer']['identification']['number'],
+                $createRequest['payer']['email'],
+                $payment->id
+            );
+
+            $emailController = new EmailController();
+            $emailController->enviarCorreo(1, "", "", "", "", "", "");
+            $emailController->enviarCorreo(
+                2, 
+                $createRequest['payer']['email'], 
+                $createRequest['payer']['first_name'], 
+                $paquete->numero_pines, 
+                $paquete->precio_pin, 
+                $paquete->total,
+                $payment->id
+            );
+
             return redirect($payment->transaction_details->external_resource_url);
         } catch (MPApiException $e) {
-
             $errorMessage = $e->getMessage();
             $statusCode = $e->getStatusCode();
             $apiResponse = $e->getApiResponse();
@@ -111,6 +141,8 @@ class TerminarPagoController extends Controller
         $request_options->setCustomHeaders(["X-Idempotency-Key: $idempotencyKey"]);
 
         try {
+            $url_base = $baseUrl = url('/');
+
             $payment = $client->create([
                 'transaction_amount' => (float) $data['transactionAmount'],
                 'token' => $data['token'],
@@ -118,6 +150,8 @@ class TerminarPagoController extends Controller
                 'installments' => (int) $data['installments'],
                 'payment_method_id' => $data['paymentMethodId'],
                 'issuer_id' => $data['issuerId'] ?? null,
+                "external_reference" => $url_base . '/estado-pago',
+                "notification_url" => $url_base . '/estado-pago',
                 'payer' => [
                     'email' => $data['payer']['email'],
                     'identification' => [
@@ -126,9 +160,39 @@ class TerminarPagoController extends Controller
                     ],
                 ],
             ], $request_options);
-    
-            return response()->json($payment);
 
+            $id_paquete = $data["id_paquete"];
+            
+            $apiUrl = "https://clima.institutocolombianodepsicometria.com/api/buscar-paquete?id_paquete=" . $id_paquete;
+            $response = Http::get($apiUrl);
+            $paquete = $response->object();
+
+            self::guardarPedido(
+                $paquete->numero_pines, 
+                $paquete->precio_pin,
+                $paquete->total,
+                $paquete->id,
+                date('d-m-Y H:i:s'),
+                $data['nombres'],
+                $data['apellidos'],
+                $data['payer']['identification']['number'],
+                $data['payer']['email'],
+                $payment->id
+            );
+            
+            $emailController = new EmailController();
+            $emailController->enviarCorreo(1, "", "", "", "", "", "");
+            $emailController->enviarCorreo(
+                2, 
+                $data['payer']['email'], 
+                $data['nombres'], 
+                $paquete->numero_pines, 
+                $paquete->precio_pin, 
+                $paquete->total,
+                $payment->id
+            );
+
+            return response()->json($payment);
         } catch (MPApiException $e) {
             $errorMessage = $e->getMessage();
             $statusCode = $e->getStatusCode();
@@ -228,5 +292,34 @@ class TerminarPagoController extends Controller
             'monto',
             'descripcion'
         ));
+    }
+
+    public function guardarPedido($np, $pp, $t, $idp, $f, $n, $a, $c, $co, $ido){
+        DB::table('pedidos')->insert([
+            'pines_comprados' => $np,
+            'precio_pin' => $pp,
+            'total' => $t,
+            'id_paquete' => $idp,
+            'fecha' => $f,
+            'nombres' => $n,
+            'apellidos' => $a,
+            'cedula' => $c,
+            'correo' => $co,
+            'id_orden' => $ido
+        ]);
+    }
+    
+
+    public function listarPedidos(){
+
+        $pedidos = DB::table('pedidos')
+        ->where("estado", 0)
+        ->get();
+
+        $client = new PaymentClient();
+        foreach ($pedidos as $pedido) {
+            $pedido->info = $client->get($pedido->id_orden);
+        }
+        return response()->json($pedidos);
     }
 }
