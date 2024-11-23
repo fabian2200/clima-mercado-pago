@@ -30,6 +30,7 @@ class EmailController extends Controller
             $mail->Subject = $encoded_subject;
 
             if($tipo == 1){
+                //$mail->addAddress("incolpsicometria@gmail.com", 'Instituto Colombiano de Psicometria');
                 $mail->addAddress("fabiandresquintero315@gmail.com", 'Instituto Colombiano de Psicometria');
                 $mail->Body = self::mapearPlantilla();
             }else{

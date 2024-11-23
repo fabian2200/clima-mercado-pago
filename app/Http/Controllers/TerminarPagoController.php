@@ -138,7 +138,14 @@ class TerminarPagoController extends Controller
         $client = new PaymentClient();
         $request_options = new RequestOptions();
         $idempotencyKey = Str::random(32);
-        $request_options->setCustomHeaders(["X-Idempotency-Key: $idempotencyKey"]);
+        $device_id = $data['deviceId'];
+
+        $request_options->setCustomHeaders(
+            [
+                "X-Idempotency-Key: $idempotencyKey",
+                "X-meli-session-id: $device_id"
+            ]
+        );
 
         try {
             $url_base = $baseUrl = url('/');
@@ -153,6 +160,8 @@ class TerminarPagoController extends Controller
                 "external_reference" => $url_base . '/estado-pago',
                 "notification_url" => $url_base . '/estado-pago',
                 'payer' => [
+                    'first_name' => $data['nombres'],
+                    'last_name' => $data['apellidos'],
                     'email' => $data['payer']['email'],
                     'identification' => [
                         'type' => $data['payer']['identification']['type'],

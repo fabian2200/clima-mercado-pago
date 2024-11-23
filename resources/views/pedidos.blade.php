@@ -181,9 +181,9 @@
                                 <td>
                                     <ul>
                                         <li>#Pines: ${item.pines_comprados}</li>
-                                        <li>Vlr. Unitario: ${item.pines_comprados}</li>
-                                        <li>Total: $ ${item.precio_pin}</li>
-                                        <li>Fecha: ${item.total}</li>
+                                        <li>Vlr. Unitario: ${item.precio_pin}</li>
+                                        <li>Total: $ ${item.total}</li>
+                                        <li>Fecha: ${item.fecha}</li>
                                     </ul>
                                 </td>
                                <td>

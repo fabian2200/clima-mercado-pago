@@ -8,8 +8,7 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <script src="https://www.mercadopago.com/v2/security.js" view="checkout"></script>
-    <link rel="stylesheet" href="{{ asset('css/estilo_page_card.css') }}">
+    <script src="https://www.mercadopago.com/v2/security.js" view="checkout" output="deviceId"></script>    <link rel="stylesheet" href="{{ asset('css/estilo_page_card.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -34,6 +33,7 @@
 </head>
 
 <body>
+    <input type="hidden" id="deviceId">
     <main>
         <nav class="navbar navbar-expand navbar-dark bg-dark">
             <a class="navbar-brand" href="#"
@@ -505,6 +505,7 @@
                                 description: productDescription,
                                 nombres: document.getElementById("form-nombres").value,
                                 apellidos: document.getElementById("form-apellidos").value,
+                                deviceId: document.getElementById("deviceId").value,
                                 payer: {
                                     email,
                                     identification: {
