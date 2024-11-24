@@ -379,9 +379,9 @@ class EmailController extends Controller
                      <br>
                      <h4>Cordial saludo $nombres_apellidos:</h4>
                      <br>
-                     <h4 style='text-align: justify;'>Hemos recibido tu pedido, estamos en proceso de verificación, una vez hayamos verificado tu pago, te enviaremos los datos de acceso a esta misma dirección de correo electrónico.</h4>
+                     <h4 style='text-align: justify;'>Hemos recibido su pedido, estamos en proceso de verificación, una vez hayamos verificado el pago, le enviaremos los datos de acceso a esta misma dirección de correo electrónico.</h4>
                      <br>
-                     <h4>Para consultar el estado de tu pedido ve al siguiente <a href='$url_base'>enlace</a> da click en el botón (estado de compra) e ingresa el siguiente ID de orden: <span style='color: red'> ($id_orden)</span></h4>
+                     <h4>Para consultar el estado de su pedido ve al siguiente <a href='$url_base'>enlace </a>, que lo llevara a la pagina de <strong style='font-style: italic;'>ClimaLaboralD10</strong>, da click en el botón (estado de compra) e ingrese el siguiente ID de orden: <span style='color: red'> ($id_orden)</span></h4>
                      <hr>
                      <br>
                      <h4>Resumen de su compra</h4>
