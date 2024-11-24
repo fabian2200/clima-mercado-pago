@@ -14,14 +14,14 @@ class EmailController extends Controller
 
         try {
             $mail->isSMTP();
-            $mail->Host = 'mail.pvtocewe.lucusvirtual.es';
+            $mail->Host = 'mail.climalaborald10.com';
             $mail->SMTPAuth = true;
-            $mail->Username = '_mainaccount@pvtocewe.lucusvirtual.es';
-            $mail->Password = 'J(1m7C1mn-0aYB';
+            $mail->Username = '_mainaccount@climalaborald10.com';
+            $mail->Password = '@7f8x-Xu3G=Wwh7';
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
             
-            $mail->setFrom('_mainaccount@pvtocewe.lucusvirtual.es', 'Instituto Colombiano de Psicometria');
+            $mail->setFrom('_mainaccount@climalaborald10.com', 'Instituto Colombiano de Psicometria');
             
     
             $mail->isHTML(true);

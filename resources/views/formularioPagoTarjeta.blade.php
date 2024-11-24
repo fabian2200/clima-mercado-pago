@@ -5,10 +5,13 @@
     <title>ICP - Compra de Pines</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/inicio/assets/img/icono-icp.png" rel="icon">
+    <link href="/inicio/assets/img/icono-icp.png" rel="apple-touch-icon">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
-    <script src="https://www.mercadopago.com/v2/security.js" view="checkout" output="deviceId"></script>    <link rel="stylesheet" href="{{ asset('css/estilo_page_card.css') }}">
+    <script src="https://www.mercadopago.com/v2/security.js" view="checkout" output="deviceId"></script>    
+    <link rel="stylesheet" href="{{ asset('css/estilo_page_card.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -56,7 +59,7 @@
             </div>
         </nav>
         <!-- Hidden input to store your integration public key -->
-        <input type="hidden" id="mercado-pago-public-key" value="TEST-af4d1474-2c7d-4aa6-a910-50504b0ed6b8">
+        <input type="hidden" id="mercado-pago-public-key" value="APP_USR-537a1a3e-af0c-45cd-a2d8-c6a78ed44222">
         <!-- Payment -->
         <section class="payment-form dark">
             <div class="container__payment" style="padding-top: 5%">
@@ -217,11 +220,11 @@
                                                 </div>
                                                 <div class="col-6">
                                                     <input required id="form-checkout__streetName" name="streetName"
-                                                        type="text" class="form-control">
+                                                        type="text" placeholder="Ej: Calle 00 # 9-00" class="form-control">
                                                 </div>
                                                 <div class="col-6">
                                                     <input required id="form-checkout__streetNumber" name="streetNumber"
-                                                        type="text" class="form-control">
+                                                        type="text" placeholder="Complemento Ej: casa esquina" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
