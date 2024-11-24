@@ -15,7 +15,7 @@ Route::get('/estado-pago', [TerminarPagoController::class, 'estadoPago'])->name(
 
 Route::get('/', function () {
          
-    $apiUrl = "https://clima.institutocolombianodepsicometria.com/api/listar-paquetes";
+    $apiUrl = "https://pruebaclima.climalaborald10.com/api/listar-paquetes";
 
     $response = Http::get($apiUrl);
 
@@ -33,7 +33,7 @@ Route::get('/', function () {
 Route::get('/formulario-pago', function (Request $request) {
     $id_paquete = $request->input('id_paquete'); 
 
-    $apiUrl = "https://clima.institutocolombianodepsicometria.com/api/buscar-paquete?id_paquete=" . $id_paquete;
+    $apiUrl = "http://pruebaclima.climalaborald10.com/api/buscar-paquete?id_paquete=" . $id_paquete;
     $response = Http::get($apiUrl);
 
     if ($response->successful()) {

@@ -79,7 +79,7 @@ class TerminarPagoController extends Controller
         try {
             $payment = $client->create($createRequest, $request_options);
             $id_paquete = $request->input("id_paquete");
-            $apiUrl = "https://clima.institutocolombianodepsicometria.com/api/buscar-paquete?id_paquete=" . $id_paquete;
+            $apiUrl = "http://pruebaclima.climalaborald10.com/api/buscar-paquete?id_paquete=" . $id_paquete;
             $response = Http::get($apiUrl);
             $paquete = $response->object();
 
@@ -168,11 +168,12 @@ class TerminarPagoController extends Controller
                         'number' => $data['payer']['identification']['number'],
                     ],
                 ],
+                'statement_descriptor' => 'ICP'
             ], $request_options);
 
             $id_paquete = $data["id_paquete"];
             
-            $apiUrl = "https://clima.institutocolombianodepsicometria.com/api/buscar-paquete?id_paquete=" . $id_paquete;
+            $apiUrl = "http://pruebaclima.climalaborald10.com/api/buscar-paquete?id_paquete=" . $id_paquete;
             $response = Http::get($apiUrl);
             $paquete = $response->object();
 

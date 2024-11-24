@@ -59,7 +59,7 @@
             </div>
         </nav>
         <!-- Hidden input to store your integration public key -->
-        <input type="hidden" id="mercado-pago-public-key" value="APP_USR-537a1a3e-af0c-45cd-a2d8-c6a78ed44222">
+        <input type="hidden" id="mercado-pago-public-key" value="APP_USR-b2918513-7934-42e2-98ea-b146bb689cc9">
         <!-- Payment -->
         <section class="payment-form dark">
             <div class="container__payment" style="padding-top: 5%">
