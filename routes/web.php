@@ -13,7 +13,11 @@ Route::get('/', function () {
 Route::get('/metodos-pago', [TerminarPagoController::class, 'listarMetodosPago'])->name('listarMetodosPago');
 Route::get('/estado-pago', [TerminarPagoController::class, 'estadoPago'])->name('estadoPago');
 
-Route::get('/', function () {
+Route::get('/', function () {   
+    return view('inicio');
+})->name('inicio');
+
+Route::get('/paquetes', function () {
          
     $apiUrl = "https://pruebaclima.climalaborald10.com/api/listar-paquetes";
 
@@ -28,7 +32,7 @@ Route::get('/', function () {
     }
         
     return view('paquetes', compact('paquetes'));
-})->name('paquetes');
+})->name('paquetesPage');
 
 Route::get('/formulario-pago', function (Request $request) {
     $id_paquete = $request->input('id_paquete'); 
